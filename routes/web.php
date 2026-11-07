@@ -16,20 +16,7 @@ use App\Http\Controllers\RespostaComunidadeController;
 use Illuminate\Support\Facades\Route;
 
 // ─── Página inicial ──────────────────────────────────────────────────────
-Route::get('/', function () {
-    $instituicoes = \App\Models\Instituicao::where('ativa', true)->withCount('provas')->get();
-    $stats = [
-        'provas'   => \App\Models\Prova::where('ativa', true)->count(),
-        'questoes' => \App\Models\Questao::where('ativa', true)->count(),
-        'usuarios' => \App\Models\User::count(),
-    ];
-    $provasRecentes = \App\Models\Prova::with('instituicao')
-        ->where('ativa', true)
-        ->orderByDesc('ano')->orderBy('etapa')
-        ->take(6)->get();
-
-    return view('welcome', compact('instituicoes', 'stats', 'provasRecentes'));
-})->name('home');
+Route::get('/', [\App\Http\Controllers\HomePublicoController::class, 'index'])->name('home');
 
 // ─── Autenticação ────────────────────────────────────────────────────────
 Auth::routes();
