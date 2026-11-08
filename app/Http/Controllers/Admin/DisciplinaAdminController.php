@@ -12,7 +12,8 @@ class DisciplinaAdminController extends Controller
 {
     public function index()
     {
-        $disciplinas = Disciplina::withCount('questoes')
+        $disciplinas = Disciplina::with(['assuntos' => fn ($q) => $q->withCount('questoes')->orderBy('nome')])
+            ->withCount('questoes')
             ->orderBy('nome')
             ->paginate(20);
 
@@ -71,5 +72,27 @@ class DisciplinaAdminController extends Controller
         );
 
         return back()->with('sucesso', 'Assunto cadastrado!');
+    }
+
+    public function destroy(Disciplina $disciplina)
+    {
+        if ($disciplina->questoes()->count() > 0) {
+            return back()->with('erro', "Não é possível excluir \"{$disciplina->nome}\" pois possui questões associadas. Desative-a em vez disso.");
+        }
+
+        $disciplina->delete();
+
+        return back()->with('sucesso', "Disciplina \"{$disciplina->nome}\" excluída.");
+    }
+
+    public function destroyAssunto(Assunto $assunto)
+    {
+        if ($assunto->questoes()->count() > 0) {
+            return back()->with('erro', "Não é possível excluir \"{$assunto->nome}\" pois possui questões associadas.");
+        }
+
+        $assunto->delete();
+
+        return back()->with('sucesso', "Assunto \"{$assunto->nome}\" excluído.");
     }
 }

@@ -171,6 +171,26 @@
                        class="btn btn-outline-secondary btn-sm py-0 px-2" style="font-size:.75rem">
                         <i class="bi bi-eye"></i>
                     </a>
+                    <a href="{{ route('admin.documentos.edit', $doc) }}"
+                       class="btn btn-outline-primary btn-sm py-0 px-2" style="font-size:.75rem">
+                        <i class="bi bi-pencil"></i>
+                    </a>
+                    @if(!$doc->ativo)
+                    <form action="{{ route('admin.documentos.ativar', $doc) }}" method="POST" class="m-0">
+                        @csrf
+                        <button class="btn btn-outline-success btn-sm py-0 px-2" style="font-size:.75rem" title="Reativar">
+                            <i class="bi bi-toggle-off"></i>
+                        </button>
+                    </form>
+                    @else
+                    <form action="{{ route('admin.documentos.destroy', $doc) }}" method="POST" class="m-0"
+                          onsubmit="return confirm('Desativar este documento?')">
+                        @csrf @method('DELETE')
+                        <button class="btn btn-outline-danger btn-sm py-0 px-2" style="font-size:.75rem" title="Desativar">
+                            <i class="bi bi-toggle-on"></i>
+                        </button>
+                    </form>
+                    @endif
                 </div>
             </div>
             @empty

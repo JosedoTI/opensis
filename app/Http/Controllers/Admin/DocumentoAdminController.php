@@ -60,6 +60,36 @@ class DocumentoAdminController extends Controller
         ));
     }
 
+    public function edit(Documento $documento)
+    {
+        $documento->load('prova.instituicao');
+        return view('admin.documentos.form', compact('documento'));
+    }
+
+    public function update(Request $request, Documento $documento)
+    {
+        $request->validate([
+            'nome_arquivo' => 'required|string|max:300',
+            'tipo'         => 'required|in:prova,gabarito,resolucao,edital,outro',
+            'url_externa'  => 'nullable|url|max:1000',
+            'observacoes'  => 'nullable|string|max:1000',
+            'ativo'        => 'boolean',
+        ]);
+
+        $documento->update($request->only([
+            'nome_arquivo', 'tipo', 'url_externa', 'observacoes', 'ativo',
+        ]));
+
+        return redirect()->route('admin.documentos.index')
+            ->with('sucesso', 'Documento atualizado!');
+    }
+
+    public function ativar(Documento $documento)
+    {
+        $documento->update(['ativo' => true]);
+        return back()->with('sucesso', 'Documento reativado.');
+    }
+
     public function destroy(Documento $documento)
     {
         $documento->update(['ativo' => false]);
