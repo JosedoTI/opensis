@@ -248,9 +248,14 @@ php artisan test --testdox
 Os testes cobrem:
 - Autenticação (login, logout, registro, usuário inativo)
 - Permissões (admin, usuário, visitante)
-- CRUD de provas no painel admin
-- API REST (públicos e autenticados)
+- CRUD de provas, questões, instituições, disciplinas e assuntos no painel admin
+- Moderação de denúncias e respostas (incluindo correção do bug de rota)
+- Inventário e edição de documentos
+- API REST (públicos e autenticados): provas, questões, gabarito, resolução, alternativas, votação
 - Regras de negócio (edição/exclusão apenas de respostas próprias)
+- Filtros públicos de provas
+
+> **Atenção:** os testes utilizam SQLite in-memory (configurado em `phpunit.xml`). Eles validam a lógica da aplicação, mas não substituem o teste manual com o banco MariaDB de desenvolvimento.
 
 ---
 
