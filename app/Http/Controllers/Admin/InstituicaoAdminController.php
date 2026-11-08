@@ -10,7 +10,8 @@ class InstituicaoAdminController extends Controller
 {
     public function index()
     {
-        $instituicoes = Instituicao::withCount('provas')->get();
+        // withCount inclui provas soft-deleted para alinhar com a proteção do destroy
+        $instituicoes = Instituicao::withCount(['provas', 'provas as provas_total_count' => fn ($q) => $q->withTrashed()])->get();
         return view('admin.instituicoes.index', compact('instituicoes'));
     }
 
@@ -21,7 +22,7 @@ class InstituicaoAdminController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $dados = $request->validate([
             'sigla'              => 'required|string|max:20|unique:instituicoes,sigla',
             'nome'               => 'required|string|max:200',
             'nome_processo'      => 'required|string|max:50',
@@ -30,7 +31,7 @@ class InstituicaoAdminController extends Controller
             'site_oficial'       => 'nullable|url|max:300',
         ]);
 
-        Instituicao::create($request->validated());
+        Instituicao::create($dados);
 
         return redirect()->route('admin.instituicoes.index')
             ->with('sucesso', 'Instituição cadastrada com sucesso!');
@@ -57,5 +58,20 @@ class InstituicaoAdminController extends Controller
 
         return redirect()->route('admin.instituicoes.index')
             ->with('sucesso', 'Instituição atualizada!');
+    }
+
+    public function destroy(Instituicao $instituicao)
+    {
+        // Conta provas incluindo as soft-deleted — qualquer vínculo impede a exclusão
+        $totalProvas = $instituicao->provas()->withTrashed()->count();
+
+        if ($totalProvas > 0) {
+            return back()->with('erro', "Não é possível excluir \"{$instituicao->sigla}\" pois possui {$totalProvas} prova(s) associada(s). Desative a instituição em vez disso.");
+        }
+
+        $instituicao->delete();
+
+        return redirect()->route('admin.instituicoes.index')
+            ->with('sucesso', "Instituição \"{$instituicao->sigla}\" excluída com sucesso.");
     }
 }

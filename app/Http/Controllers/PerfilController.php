@@ -55,10 +55,12 @@ class PerfilController extends Controller
             'senha_atual' => 'required',
             'password'    => ['required', 'confirmed', Password::min(8)->letters()->numbers()],
         ], [
-            'senha_atual.required' => 'Informe sua senha atual.',
-            'password.required'    => 'Informe a nova senha.',
-            'password.confirmed'   => 'A confirmação da senha não confere.',
-            'password.min'         => 'A senha deve ter no mínimo 8 caracteres.',
+            'senha_atual.required'  => 'Informe sua senha atual.',
+            'password.required'     => 'Informe a nova senha.',
+            'password.confirmed'    => 'A confirmação da senha não confere.',
+            'password.min'          => 'A senha deve ter no mínimo 8 caracteres.',
+            'password.letters'      => 'A senha deve conter pelo menos uma letra.',
+            'password.numbers'      => 'A senha deve conter pelo menos um número.',
         ]);
 
         if (!Hash::check($request->senha_atual, $request->user()->password)) {

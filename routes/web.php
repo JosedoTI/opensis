@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\DocumentoAdminController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DisciplinaAdminController;
 use App\Http\Controllers\Admin\InstituicaoAdminController;
@@ -64,6 +65,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::post('instituicoes', [InstituicaoAdminController::class, 'store'])->name('instituicoes.store');
     Route::get('instituicoes/{instituicao}/editar', [InstituicaoAdminController::class, 'edit'])->name('instituicoes.edit');
     Route::put('instituicoes/{instituicao}', [InstituicaoAdminController::class, 'update'])->name('instituicoes.update');
+    Route::delete('instituicoes/{instituicao}', [InstituicaoAdminController::class, 'destroy'])->name('instituicoes.destroy');
 
     // Provas
     Route::get('provas', [ProvaAdminController::class, 'index'])->name('provas.index');
@@ -98,6 +100,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::post('usuarios/{usuario}/toggle-ativo', [UsuarioAdminController::class, 'toggleAtivo'])->name('usuarios.toggle-ativo');
     Route::post('usuarios/{usuario}/promover', [UsuarioAdminController::class, 'promoverAdmin'])->name('usuarios.promover');
     Route::post('usuarios/{usuario}/rebaixar', [UsuarioAdminController::class, 'rebaixar'])->name('usuarios.rebaixar');
+
+    // Documentos — inventário
+    Route::get('documentos', [DocumentoAdminController::class, 'index'])->name('documentos.index');
+    Route::delete('documentos/{documento}', [DocumentoAdminController::class, 'destroy'])->name('documentos.destroy');
 
     // Moderação
     Route::get('moderacao', [ModeracaoController::class, 'index'])->name('moderacao.index');

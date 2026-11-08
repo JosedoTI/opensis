@@ -35,9 +35,25 @@
                     <a href="{{ route('admin.instituicoes.edit', $inst) }}" class="btn btn-outline-primary btn-sm">
                         <i class="bi bi-pencil me-1"></i>Editar
                     </a>
+                    @if($inst->site_oficial)
                     <a href="{{ $inst->site_oficial }}" target="_blank" class="btn btn-outline-secondary btn-sm">
                         <i class="bi bi-link-45deg me-1"></i>Site oficial
                     </a>
+                    @endif
+                    @if($inst->provas_total_count === 0)
+                    <form action="{{ route('admin.instituicoes.destroy', $inst) }}" method="POST"
+                          onsubmit="return confirm('Excluir a instituição {{ $inst->sigla }}? Esta ação não pode ser desfeita.')">
+                        @csrf @method('DELETE')
+                        <button type="submit" class="btn btn-outline-danger btn-sm">
+                            <i class="bi bi-trash me-1"></i>Excluir
+                        </button>
+                    </form>
+                    @else
+                    <button type="button" class="btn btn-outline-secondary btn-sm" disabled
+                            title="Possui {{ $inst->provas_total_count }} prova(s) associada(s) (incluindo removidas)">
+                        <i class="bi bi-lock me-1"></i>Excluir
+                    </button>
+                    @endif
                 </div>
             </div>
         </div>

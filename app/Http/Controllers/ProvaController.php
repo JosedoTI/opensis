@@ -28,10 +28,10 @@ class ProvaController extends Controller
 
         $provas = $query->orderByDesc('ano')->orderBy('etapa')->paginate(18)->withQueryString();
 
-        // Anos disponíveis para filtro
-        $anos = Prova::selectRaw('DISTINCT ano')->orderByDesc('ano')->pluck('ano');
+        $anos   = Prova::selectRaw('DISTINCT ano')->orderByDesc('ano')->pluck('ano');
+        $etapas = Prova::selectRaw('DISTINCT etapa')->orderBy('etapa')->pluck('etapa');
 
-        return view('provas.index', compact('provas', 'instituicoes', 'anos'));
+        return view('provas.index', compact('provas', 'instituicoes', 'anos', 'etapas'));
     }
 
     public function show(Prova $prova)

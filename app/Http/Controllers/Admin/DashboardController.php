@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Denúncia;
 use App\Models\Denuncia;
 use App\Models\Disciplina;
 use App\Models\Instituicao;

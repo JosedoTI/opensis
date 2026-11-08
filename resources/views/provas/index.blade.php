@@ -38,8 +38,14 @@
                 </div>
                 <div class="col-sm-3">
                     <label class="form-label small fw-semibold">Etapa</label>
-                    <input type="text" name="etapa" class="form-control form-control-sm"
-                           value="{{ request('etapa') }}" placeholder="Ex: 1ª Etapa, PSC 2">
+                    <select name="etapa" class="form-select form-select-sm">
+                        <option value="">Todas</option>
+                        @foreach($etapas as $etapa)
+                            <option value="{{ $etapa }}" {{ request('etapa') == $etapa ? 'selected' : '' }}>
+                                {{ $etapa }}
+                            </option>
+                        @endforeach
+                    </select>
                 </div>
                 <div class="col-sm-2">
                     <button type="submit" class="btn btn-primary btn-sm w-100">
