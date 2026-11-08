@@ -26,14 +26,21 @@ class DenunciaController extends Controller
             return back()->with('aviso', 'Você já denunciou esta resposta.');
         }
 
-        Denuncia::create([
-            'resposta_id' => $resposta->id,
-            'user_id'     => $request->user()->id,
-            'motivo'      => $request->motivo,
-            'descricao'   => $request->descricao,
-        ]);
+        try {
+            \DB::transaction(function () use ($request, $resposta) {
+                Denuncia::create([
+                    'resposta_id' => $resposta->id,
+                    'user_id'     => $request->user()->id,
+                    'motivo'      => $request->motivo,
+                    'descricao'   => $request->descricao,
+                ]);
 
-        $resposta->increment('total_denuncias');
+                $resposta->increment('total_denuncias');
+            });
+        } catch (\Illuminate\Database\QueryException $e) {
+            // Constraint UNIQUE violada — denúncia duplicada por race condition
+            return back()->with('aviso', 'Você já denunciou esta resposta.');
+        }
 
         return back()->with('sucesso', 'Denúncia registrada. Nossa equipe irá analisar em breve.');
     }

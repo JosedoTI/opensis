@@ -92,7 +92,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::get('disciplinas', [DisciplinaAdminController::class, 'index'])->name('disciplinas.index');
     Route::post('disciplinas', [DisciplinaAdminController::class, 'store'])->name('disciplinas.store');
     Route::put('disciplinas/{disciplina}', [DisciplinaAdminController::class, 'update'])->name('disciplinas.update');
+    Route::delete('disciplinas/{disciplina}', [DisciplinaAdminController::class, 'destroy'])->name('disciplinas.destroy');
     Route::post('disciplinas/{disciplina}/assuntos', [DisciplinaAdminController::class, 'storeAssunto'])->name('disciplinas.assuntos.store');
+    Route::delete('assuntos/{assunto}', [DisciplinaAdminController::class, 'destroyAssunto'])->name('disciplinas.assuntos.destroy');
 
     // Usuários
     Route::get('usuarios', [UsuarioAdminController::class, 'index'])->name('usuarios.index');
@@ -103,12 +105,15 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
 
     // Documentos — inventário
     Route::get('documentos', [DocumentoAdminController::class, 'index'])->name('documentos.index');
+    Route::get('documentos/{documento}/editar', [DocumentoAdminController::class, 'edit'])->name('documentos.edit');
+    Route::put('documentos/{documento}', [DocumentoAdminController::class, 'update'])->name('documentos.update');
+    Route::post('documentos/{documento}/ativar', [DocumentoAdminController::class, 'ativar'])->name('documentos.ativar');
     Route::delete('documentos/{documento}', [DocumentoAdminController::class, 'destroy'])->name('documentos.destroy');
 
-    // Moderação
+    // Moderação — rotas literais ANTES das rotas com parâmetro {denuncia}
     Route::get('moderacao', [ModeracaoController::class, 'index'])->name('moderacao.index');
-    Route::get('moderacao/{denuncia}', [ModeracaoController::class, 'show'])->name('moderacao.show');
-    Route::post('moderacao/{denuncia}/analisar', [ModeracaoController::class, 'analisar'])->name('moderacao.analisar');
     Route::get('moderacao/respostas/listar', [ModeracaoController::class, 'respostas'])->name('moderacao.respostas');
     Route::post('moderacao/respostas/{resposta}/toggle', [ModeracaoController::class, 'toggleOcultar'])->name('moderacao.toggle');
+    Route::get('moderacao/{denuncia}', [ModeracaoController::class, 'show'])->name('moderacao.show');
+    Route::post('moderacao/{denuncia}/analisar', [ModeracaoController::class, 'analisar'])->name('moderacao.analisar');
 });

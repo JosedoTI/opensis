@@ -54,7 +54,10 @@ class InstituicaoAdminController extends Controller
             'ativa'              => 'boolean',
         ]);
 
-        $instituicao->update($request->all());
+        $instituicao->update($request->only([
+            'sigla', 'nome', 'nome_processo', 'descricao_processo',
+            'cor_primaria', 'site_oficial', 'ativa',
+        ]));
 
         return redirect()->route('admin.instituicoes.index')
             ->with('sucesso', 'Instituição atualizada!');
